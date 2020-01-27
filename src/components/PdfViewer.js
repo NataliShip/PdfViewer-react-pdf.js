@@ -1,12 +1,21 @@
-import React from 'react'
+import React, {Component} from 'react'
+import PropTypes from 'prop-types'
 import './pdfViewer.sass'
+import pdfjs from "pdfjs-dist"
 
-function PdfViewer() {
-  return (
-    <div className="root">
-      test
-    </div>
-  );
+class PdfViewer extends Component {
+  static propTypes = {
+    link: PropTypes.string.isRequired,
+    sandbox: PropTypes.bool
+  }
+
+  render () {
+    return (
+      <div className="root">
+        PdfViewer wrapper for React
+      </div>
+    )
+  }
 }
 
 export default PdfViewer
