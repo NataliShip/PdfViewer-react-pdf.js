@@ -1,6 +1,4 @@
-import {resolve} from "dns";
-
-export type PdfViewerProps = {
+ export type PdfViewerProps = {
     src: string
 }
 
