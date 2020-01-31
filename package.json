@@ -3,11 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "core-js": "^2.5.7",
     "node-sass": "^4.13.1",
     "pdfjs-dist": "^2.2.228",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
-    "react-scripts": "3.2.0"
+    "react-scripts": "3.2.0",
+    "screenfull": "^5.0.1"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",

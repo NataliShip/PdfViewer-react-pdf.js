@@ -1,11 +1,151 @@
 body
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue", sans-serif
 
+.header
+  font-size: 32px
+  text-align: center
+  margin-bottom: 50px
+  font-weight: normal
+
 .root
+  position: relative
+  width: 100%
   display: flex
   justify-content: center
   align-items: center
 
-.header
-  font-size: 32px
-  text-align: center
+.wrap
+  width: 900px
+  height: 100%
+
+.canvas
+  display: block
+
+.textAndAnnotationLayer
+  position: absolute
+  left: 0
+  top: 0
+  right: 0
+  bottom: 0
+  overflow: hidden
+  line-height: 1.0
+  border: 1px solid #ECECEC
+
+  & section
+    color: transparent
+    position: absolute
+    white-space: pre
+    cursor: text
+    transform-origin: 0% 0%
+
+
+  & section > a
+    display: block
+    width: 100%
+    height: 100%
+
+.textAndAnnotationLayer > span
+  color: transparent
+  pointer-events: all
+  position: absolute
+  white-space: pre
+  cursor: text
+  transform-origin: 0% 0%
+
+.sandbox
+  margin-bottom: 25px
+  max-width: 200px
+
+.document
+  width: 100%
+  height: 100%
+  position: relative
+
+  &:hover
+    .controls
+      opacity: 1
+
+  &:fullscreen
+    border: none
+
+    &:hover
+      .controls
+        opacity: 0
+
+    .controls
+      &:hover
+        opacity: 1 !important
+
+    &.vertical
+      .page
+        height: 100%
+        overflow-x: auto
+
+        canvas
+          margin: 0 auto
+
+    &.horizontal
+      .page
+        height: 100%
+        overflow-y: auto
+        display: flex
+        align-items: center
+
+.controls
+  height: 42px
+  background: rgba(0, 0, 0, 0.6)
+  position: absolute
+  bottom: 0
+  left: 0
+  width: 100%
+  opacity: 0
+  transition: opacity .3s
+  display: flex
+  flex-flow: row nowrap
+  align-items: center
+  justify-content: space-between
+
+.leftControls, .rightControls
+  display: flex
+  flex-flow: row nowrap
+  align-items: center
+
+.previous, .next
+  width: 16px
+  display: flex
+  align-items: center
+  justify-content: center
+  flex-flow: row nowrap
+  cursor: pointer
+
+  &::before
+    content: ''
+    background-image: url('./images/arrow.svg')
+    width: 8px
+    height: 13px
+
+.pages
+  margin-left: 20px
+  color: #fff
+  font-size: 14px
+
+.previous
+  margin-left: 10px
+
+.next
+  transform: rotate(180deg)
+  margin-left: 8px
+
+.download
+  background-image: url('./images/download.svg')
+  width: 15px
+  height: 15px
+  text-decoration: none
+  margin-right: 15px
+
+.fullscreen
+  background-image: url('./images/fullscreen.svg')
+  width: 15px
+  height: 15px
+  cursor: pointer
+  margin-right: 15px
