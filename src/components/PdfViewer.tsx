@@ -7,6 +7,7 @@ import { PDFLinkService } from 'pdfjs-dist/lib/web/pdf_link_service'
 import NullL10n from 'pdfjs-dist/lib/web/ui_utils.js'
 import screenfull from 'screenfull'
 import isMobile from 'ismobilejs'
+import throttle from 'lodash/throttle'
 import { PdfViewerProps, PdfViewerState, pageType } from "./types"
 import './pdfViewer.sass'
 
@@ -41,11 +42,19 @@ class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
   private document = React.createRef<HTMLDivElement>()
   private canvas = React.createRef<HTMLCanvasElement>()
   private textAndAnnotationLayer = React.createRef<HTMLDivElement>()
+  throttledChangeDocumentSize
 
   componentDidMount () {
     this.fetchPdf(this.props.src)
         .then(() => this.pageRendering())
         .catch(() => this.setState({pdfLoadingError: true}))
+
+    this.throttledChangeDocumentSize = throttle(this.pageRendering, 100)
+    window.addEventListener('resize', this.throttledChangeDocumentSize)
+  }
+
+  componentWillUnmount () {
+    window.removeEventListener('resize', this.throttledChangeDocumentSize)
   }
 
   private fetchPdf = async (src: string) => {

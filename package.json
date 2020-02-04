@@ -5,6 +5,7 @@
   "dependencies": {
     "core-js": "^2.5.7",
     "ismobilejs": "^1.0.3",
+    "lodash": "^4.17.15",
     "node-sass": "^4.13.1",
     "pdfjs-dist": "^2.2.228",
     "react": "^16.10.2",
