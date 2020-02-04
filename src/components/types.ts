@@ -1,39 +1,40 @@
- export type PdfViewerProps = {
-    src: string
+export type PdfViewerProps = {
+  src: string,
+  sandbox?: boolean
 }
 
 export type PdfViewerState = {
-    pdf: null | {
-        getPage(currentPageNumber: number): pageType
-    },
-    testFileContent: null | object,
-    pagesCount: number,
-    currentPageNumber: number,
-    onCatchErrorReloadedCount: number,
-    switchPageBlocked: boolean,
-    scale: number,
-    isPdfLoaded: boolean,
-    isShowError: boolean,
-    pdfLoadingError: boolean
+  pdf: null | {
+    getPage(currentPageNumber: number): pageType
+  },
+  testFileContent: null | string,
+  pagesCount: number,
+  currentPageNumber: number,
+  onCatchErrorReloadedCount: number,
+  switchPageBlocked: boolean,
+  scale: number,
+  isPdfLoaded: boolean,
+  isShowError: boolean,
+  pdfLoadingError: boolean
 }
 
 
 export type pageType = {
-    getViewport(scale: object) : viewportType
-    getTextContent(): object
-    render(renderContext: renderContextType) : renderTaskType
+  getViewport(scale: object): viewportType
+  getTextContent(): object
+  render(renderContext: renderContextType): renderTaskType
 }
 
 export type renderTaskType = {
-    promise: Promise<object>
+  promise: Promise<object>
 }
 
 export type renderContextType = {
-    canvasContext: object,
-    viewport: viewportType
+  canvasContext: object,
+  viewport: viewportType
 }
 
 export type viewportType = {
-    width: number,
-    height: number
+  width: number,
+  height: number
 }

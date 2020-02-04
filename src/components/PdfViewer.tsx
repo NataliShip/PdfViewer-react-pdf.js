@@ -1,4 +1,4 @@
-import React, {Component} from 'react'
+import React, {Component, Fragment} from 'react'
 import PropTypes from 'prop-types'
 import pdfjs from 'pdfjs-dist'
 import pdfjsWorker from 'pdfjs-dist/build/pdf.worker.entry'
@@ -6,6 +6,7 @@ import { AnnotationLayerBuilder } from 'pdfjs-dist/lib/web/annotation_layer_buil
 import { PDFLinkService } from 'pdfjs-dist/lib/web/pdf_link_service'
 import NullL10n from 'pdfjs-dist/lib/web/ui_utils.js'
 import screenfull from 'screenfull'
+import isMobile from 'ismobilejs'
 import { PdfViewerProps, PdfViewerState, pageType } from "./types"
 import './pdfViewer.sass'
 
@@ -13,7 +14,8 @@ pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
   static propTypes = {
-    src: PropTypes.string
+    src: PropTypes.string,
+    sandbox: PropTypes.bool
   }
 
   static defaultProps = {
@@ -128,13 +130,71 @@ class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
     return newScale
   }
 
+  private switchPageHandler = (next = false) => {
+    const { currentPageNumber, pagesCount, switchPageBlocked } = this.state
+
+    if (switchPageBlocked) return
+
+    let newPageNumber = next ? currentPageNumber + 1 : currentPageNumber - 1
+    if (newPageNumber < 1) newPageNumber = 1
+    if (newPageNumber > pagesCount) newPageNumber = pagesCount
+
+    this.setState(
+      { currentPageNumber: newPageNumber, switchPageBlocked: currentPageNumber !== newPageNumber },
+      () => this.pageRendering()
+    )
+  }
+
+  private toggleFullScreenHandler = () => {
+    const el = this.wrap.current
+
+    if (!el) return
+
+    // @ts-ignore
+    screenfull.toggle(el)
+  }
+
   render(): React.ReactElement {
+    const { sandbox, src } = this.props
+    const {
+      testFileContent,
+      switchPageBlocked,
+      pagesCount,
+      currentPageNumber
+    } = this.state
+
+    const file = sandbox ? testFileContent : src
+
     return (
       <div className='root'>
         <div className='wrap' ref={this.wrap}>
           <div className='document' ref={this.document}>
             <canvas className='canvas' ref={this.canvas} />
             <div className='textAndAnnotationLayer' ref={this.textAndAnnotationLayer} />
+
+            <div className='controls'>
+              <div className='leftControls'>
+                {
+                  pagesCount > 1 && (
+                      <Fragment>
+                        <div className='previous' onClick={() => !switchPageBlocked ? this.switchPageHandler() : null} />
+
+                        <div className='next' onClick={() => !switchPageBlocked ? this.switchPageHandler(true) : null} />
+                      </Fragment>
+                  )
+                }
+                <div className='pages'>Страница {currentPageNumber} из {pagesCount}</div>
+              </div>
+
+              <div className='rightControls'>
+                <a className='download' download href={file} />
+
+                {
+                  // @ts-ignore
+                  screenfull.isEnabled && !isMobile('any').any && <div className='fullscreen' onClick={this.toggleFullScreenHandler} />
+                }
+              </div>
+            </div>
           </div>
         </div>
       </div>
