@@ -13,6 +13,8 @@ import './pdfViewer.sass'
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
+const MAX_RELOAD_COUNT_ON_ERROR = 2
+
 class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
   static propTypes = {
     src: PropTypes.string,
@@ -55,6 +57,35 @@ class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
 
   componentWillUnmount () {
     window.removeEventListener('resize', this.throttledChangeDocumentSize)
+  }
+
+  componentWillReceiveProps (nextProps) {
+    if (nextProps.src !== this.props.src) {
+      this.setState({
+        isShowError: false,
+        pdfLoadingError: false,
+        pdf: null,
+        testFileContent: null,
+        currentPageNumber: 1,
+        pagesCount: 0
+      })
+      // отрисовываем новый pdf
+      this.fetchPdf(nextProps.link)
+        .then(() => this.pageRendering())
+        .catch(() => this.setState({pdfLoadingError: true}))
+    }
+  }
+
+  componentDidCatch () {
+    const { onCatchErrorReloadedCount } = this.state
+    // если по каким-то причинам происходит эксепшн, то перезагружаем документ
+    // и он будет загружен на текущей странице, если попытки закончились, показываем ошибку
+
+    if (onCatchErrorReloadedCount < MAX_RELOAD_COUNT_ON_ERROR) {
+      this.setState({ onCatchErrorReloadedCount: onCatchErrorReloadedCount + 1 })
+    } else {
+      this.setState({ isShowError: true })
+    }
   }
 
   private fetchPdf = async (src: string) => {
@@ -129,7 +160,8 @@ class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
     if (this.wrap.current.clientWidth === viewport.width) return newScale
 
     // @ts-ignore
-    if (screenfull.isFullscreen && viewport.width / viewport.height < 1.5) { // screenfull library not support types for isFullscreen property
+    // screenfull library not support types
+    if (screenfull.isFullscreen && viewport.width / viewport.height < 1.5) {
       newScale = this.wrap.current.clientHeight / viewport.height * this.state.scale
     } else {
       newScale = this.wrap.current.clientWidth / viewport.width * this.state.scale
@@ -160,12 +192,15 @@ class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
     if (!el) return
 
     // @ts-ignore
+    // screenfull library not support types
     screenfull.toggle(el)
   }
 
   render(): React.ReactElement {
     const { sandbox, src } = this.props
     const {
+      isShowError,
+      pdfLoadingError,
       testFileContent,
       switchPageBlocked,
       pagesCount,
@@ -173,6 +208,22 @@ class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
     } = this.state
 
     const file = sandbox ? testFileContent : src
+
+    if (isShowError) {
+      return (
+        <div className='root'>
+          Произошла ошибка при просмотре документа
+        </div>
+      )
+    }
+
+    if (pdfLoadingError && !sandbox) {
+      return (
+        <div className='root'>
+          Не удалось загрузить pdf файл
+        </div>
+      )
+    }
 
     return (
       <div className='root'>
