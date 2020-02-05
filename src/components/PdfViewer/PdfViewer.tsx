@@ -8,24 +8,25 @@ import NullL10n from 'pdfjs-dist/lib/web/ui_utils.js'
 import screenfull from 'screenfull'
 import isMobile from 'ismobilejs'
 import throttle from 'lodash/throttle'
-import { PdfViewerProps, PdfViewerState, pageType } from "./types"
+import {
+  PdfViewerPropsTypes,
+  PdfViewerStateTypes,
+  pageType
+} from './types'
+import Upload from '../Upload/Upload'
 import './pdfViewer.sass'
 
 pdfjs.GlobalWorkerOptions.workerSrc = pdfjsWorker
 
 const MAX_RELOAD_COUNT_ON_ERROR = 2
 
-class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
+class PdfViewer extends Component<PdfViewerPropsTypes, PdfViewerStateTypes> {
   static propTypes = {
     src: PropTypes.string,
     sandbox: PropTypes.bool
   }
 
-  static defaultProps = {
-    src: `${process.env.PUBLIC_URL}/test.pdf`
-  }
-
-  state: PdfViewerState = {
+  state: PdfViewerStateTypes = {
     pdf: null,
     testFileContent: null,
     pagesCount: 0,
@@ -106,7 +107,7 @@ class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
 
     // подготовка canvas по размерам pdf при выбранном scale
     const scale = this.getScaleForCurrentWidth(page)
-    const viewport = page.getViewport({scale})
+    const viewport = await page.getViewport({scale})
     this.canvas.current.height = viewport.height
     this.canvas.current.width = viewport.width
 
@@ -196,10 +197,17 @@ class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
     screenfull.toggle(el)
   }
 
+  afterUpload = ({ fileContent }) => {
+    this.setState({ testFileContent: fileContent, pdfLoadingError: false })
+    this.fetchPdf(fileContent)
+      .then(() => this.pageRendering())
+  }
+
   render(): React.ReactElement {
     const { sandbox, src } = this.props
     const {
       isShowError,
+      isPdfLoaded,
       pdfLoadingError,
       testFileContent,
       switchPageBlocked,
@@ -227,36 +235,52 @@ class PdfViewer extends Component<PdfViewerProps, PdfViewerState> {
 
     return (
       <div className='root'>
-        <div className='wrap' ref={this.wrap}>
-          <div className='document' ref={this.document}>
-            <canvas className='canvas' ref={this.canvas} />
-            <div className='textAndAnnotationLayer' ref={this.textAndAnnotationLayer} />
+        {
+          sandbox && !testFileContent &&
+          <div className='sandbox'>
+            <p><strong>Sandbox</strong></p>
+            <Upload
+              afterUploadAction={this.afterUpload}
+              maxSizeInKB={1000000000}
+              accept={['application/pdf']}
+              label='Выберите PDF документ'
+            />
+          </div>
+        }
+        {
+          isPdfLoaded
+          ? <div className='wrap' ref={this.wrap}>
+              <div className='document' ref={this.document}>
+                <canvas className='canvas' ref={this.canvas} />
+                <div className='textAndAnnotationLayer' ref={this.textAndAnnotationLayer} />
 
-            <div className='controls'>
-              <div className='leftControls'>
-                {
-                  pagesCount > 1 && (
-                      <Fragment>
-                        <div className='previous' onClick={() => !switchPageBlocked ? this.switchPageHandler() : null} />
+                <div className='controls'>
+                  <div className='leftControls'>
+                    {
+                      pagesCount > 1 && (
+                        <Fragment>
+                          <div className='previous' onClick={() => !switchPageBlocked ? this.switchPageHandler() : null} />
 
-                        <div className='next' onClick={() => !switchPageBlocked ? this.switchPageHandler(true) : null} />
-                      </Fragment>
-                  )
-                }
-                <div className='pages'>Страница {currentPageNumber} из {pagesCount}</div>
-              </div>
+                          <div className='next' onClick={() => !switchPageBlocked ? this.switchPageHandler(true) : null} />
+                        </Fragment>
+                      )
+                    }
+                    <div className='pages'>Страница {currentPageNumber} из {pagesCount}</div>
+                  </div>
 
-              <div className='rightControls'>
-                <a className='download' download href={file} />
+                  <div className='rightControls'>
+                    <a className='download' download href={file} />
 
-                {
-                  // @ts-ignore
-                  screenfull.isEnabled && !isMobile('any').any && <div className='fullscreen' onClick={this.toggleFullScreenHandler} />
-                }
+                    {
+                      // @ts-ignore
+                      screenfull.isEnabled && !isMobile('any').any && <div className='fullscreen' onClick={this.toggleFullScreenHandler} />
+                    }
+                  </div>
+                </div>
               </div>
             </div>
-          </div>
-        </div>
+            : !sandbox && <div>Идет загрузка документа...</div>
+        }
       </div>
     )
   }

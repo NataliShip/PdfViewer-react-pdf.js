@@ -1,9 +1,9 @@
-export type PdfViewerProps = {
-  src: string,
+export type PdfViewerPropsTypes = {
+  src?: string,
   sandbox?: boolean
 }
 
-export type PdfViewerState = {
+export type PdfViewerStateTypes = {
   pdf: null | {
     getPage(currentPageNumber: number): pageType
   },
