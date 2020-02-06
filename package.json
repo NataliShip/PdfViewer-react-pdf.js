@@ -2,8 +2,10 @@
   "name": "pdf-viewer",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://nataliship.github.io/PdfViewer-react-pdf.js/",
   "dependencies": {
     "core-js": "^2.5.7",
+    "gh-pages": "^2.2.0",
     "ismobilejs": "^1.0.3",
     "lodash": "^4.17.15",
     "node-sass": "^4.13.1",
@@ -26,6 +28,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "eject": "react-scripts eject"
   },
   "browserslist": {
