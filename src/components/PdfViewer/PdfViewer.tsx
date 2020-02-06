@@ -60,7 +60,7 @@ class PdfViewer extends Component<PdfViewerPropsTypes, PdfViewerStateTypes> {
     window.removeEventListener('resize', this.throttledChangeDocumentSize)
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentDidUpdate (nextProps) {
     if (nextProps.src !== this.props.src) {
       this.setState({
         isShowError: false,
