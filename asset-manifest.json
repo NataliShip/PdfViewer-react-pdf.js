@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/PdfViewer-react-pdf.js/static/css/main.cbb01e8f.chunk.css",
+    "main.js": "/PdfViewer-react-pdf.js/static/js/main.9792e537.chunk.js",
+    "main.js.map": "/PdfViewer-react-pdf.js/static/js/main.9792e537.chunk.js.map",
+    "runtime-main.js": "/PdfViewer-react-pdf.js/static/js/runtime-main.a1c03914.js",
+    "runtime-main.js.map": "/PdfViewer-react-pdf.js/static/js/runtime-main.a1c03914.js.map",
+    "static/js/2.211992d0.chunk.js": "/PdfViewer-react-pdf.js/static/js/2.211992d0.chunk.js",
+    "static/js/2.211992d0.chunk.js.map": "/PdfViewer-react-pdf.js/static/js/2.211992d0.chunk.js.map",
+    "index.html": "/PdfViewer-react-pdf.js/index.html",
+    "precache-manifest.0ba4eaebd5a520e9738925be322f88bf.js": "/PdfViewer-react-pdf.js/precache-manifest.0ba4eaebd5a520e9738925be322f88bf.js",
+    "service-worker.js": "/PdfViewer-react-pdf.js/service-worker.js",
+    "static/css/main.cbb01e8f.chunk.css.map": "/PdfViewer-react-pdf.js/static/css/main.cbb01e8f.chunk.css.map",
+    "static/media/pdfViewer.sass": "/PdfViewer-react-pdf.js/static/media/fullscreen.d39c133a.svg"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.a1c03914.js",
+    "static/js/2.211992d0.chunk.js",
+    "static/css/main.cbb01e8f.chunk.css",
+    "static/js/main.9792e537.chunk.js"
+  ]
+}
