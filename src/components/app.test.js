@@ -1,8 +1,6 @@
 /* eslint-env jest */
-import { shallow, mount } from 'enzyme'
 import React from 'react'
-import '@babel/polyfill'
-import { configure } from 'enzyme'
+import { shallow, configure } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 import App from './App'
 import PdfViewer from './PdfViewer/PdfViewer'
