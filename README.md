@@ -23,3 +23,4 @@ import PdfViewer from './PdfViewer/PdfViewer'
 ```
 
 
+![Alt text](https://raw.githubusercontent.com/NataliShip/PdfViewer-react-pdf.js/master/public/demo-screenshot.png "pdfViewer")
