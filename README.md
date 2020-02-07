@@ -3,6 +3,23 @@
 
 A React component to wrap Mozilla's [PDF.js](http://mozilla.github.io/pdf.js/) with Text layer and Annotation layer, with pagination and fullcsreen mode, link opens in new tab.
 
-You can see working Demo on github pages https://nataliship.github.io/PdfViewer-react-pdf.js/
+You can see working **DEMO** on github pages https://nataliship.github.io/PdfViewer-react-pdf.js/
+
+**Usage**
+
+*Props:*
+
+`src` - link to your pdf file (absolute or relative) or prf file in base64 encoding
+
+`sandbox` - boolean flag to enable sandbox mode for development (you can download any pdf)
+
+```js      
+import PdfViewer from './PdfViewer/PdfViewer'
+...
+
+<PdfViewer sandbox />  
+<PdfViewer src={your_src} />
+...
+```
 
 
