@@ -9,7 +9,7 @@
     "gh-pages": "^2.2.0",
     "ismobilejs": "^1.0.3",
     "lodash": "^4.17.15",
-    "node-sass": "^4.13.1",
+    "node-sass": "^7.0.0",
     "pdfjs-dist": "^2.2.228",
     "react": "^16.10.2",
     "react-dom": "^16.10.2",
